@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Image Slider</title>
+    <style>
+       
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .slider-container {
+            position: relative;
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: #fff;
+        }
+
+        .slider {
+            position: relative;
+            width: 100%;
+        }
+
+        .slider img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slider img.active {
+            opacity: 1;
+            position: relative;
+        }
+
+        .caption-container {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px 0;
+        }
+
+        .caption {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .description {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            transition: background-color 0.3s ease;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        /* Thumbnail navigation */
+        .thumbnails {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .thumbnails img {
+            width: 100px;
+            margin: 0 5px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .thumbnails img.active {
+            opacity: 1;
+            border: 2px solid #007BFF;
+        }
+
+        .thumbnails img:hover {
+            opacity: 1;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .prev, .next {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+  
+    <div class="slider-container">
+        <div class="slider">
+            <img src="https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg" alt="Image 1" class="active" data-caption="Bird in Nature" data-description="A beautiful bird captured in its natural habitat.">
+            <img src="https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDI0LTAxL3Jhd3BpeGVsX29mZmljZV80Nl9tYWNyb19waG90b19vZl9hX2dsYXNzd2luZ19idXR0ZXJmbHlfd2lsZGxpZl9hZTM2YzZhMi0yYjdiLTQ1YzctOWU4Yy1iYzI0MzhkYzlmMDRfMS5qcGc.jpg" alt="Image 2" data-caption="Cityscape" data-description="A vibrant city skyline during sunset.">
+            <img src="https://cdn.pixabay.com/photo/2024/04/08/15/45/flower-8683806_1280.jpg" alt="Image 3" data-caption="Flower in Bloom" data-description="A close-up of a flower in full bloom.">
+           
+        </div>
+        <div class="caption-container">
+            <p class="caption">Bird in Nature</p>
+            <p class="description">A beautiful bird captured in its natural habitat.</p>
+        </div>
+        <button class="prev">❮</button>
+        <button class="next">❯</button>
+        <div class="thumbnails">
+            <img src="https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg" alt="Image 1" class="active" onclick="currentSlide(0)">
+            <img src="https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDI0LTAxL3Jhd3BpeGVsX29mZmljZV80Nl9tYWNyb19waG90b19vZl9hX2dsYXNzd2luZ19idXR0ZXJmbHlfd2lsZGxpZl9hZTM2YzZhMi0yYjdiLTQ1YzctOWU4Yy1iYzI0MzhkYzlmMDRfMS5qcGc.jpg" alt="Image 2" onclick="currentSlide(1)">
+            <img src="https://cdn.pixabay.com/photo/2024/04/08/15/45/flower-8683806_1280.jpg" alt="Image 3" onclick="currentSlide(2)">
+           
+        </div>
+    </div>
+
+    <script>
+       
+        const images = document.querySelectorAll('.slider img');
+        const prevButton = document.querySelector('.prev');
+        const nextButton = document.querySelector('.next');
+        const thumbnails = document.querySelectorAll('.thumbnails img');
+        const caption = document.querySelector('.caption');
+        const description = document.querySelector('.description');
+
+        let index = 0;
+
+        function showImage(idx) {
+            images.forEach((img, i) => {
+                img.classList.toggle('active', i === idx);
+                thumbnails[i].classList.toggle('active', i === idx);
+            });
+            caption.textContent = images[idx].getAttribute('data-caption');
+            description.textContent = images[idx].getAttribute('data-description');
+        }
+
+        function currentSlide(idx) {
+            index = idx;
+            showImage(idx);
+        }
+
+        nextButton.addEventListener('click', () => {
+            index = (index + 1) % images.length;
+            showImage(index);
+        });
+
+        prevButton.addEventListener('click', () => {
+            index = (index - 1 + images.length) % images.length;
+            showImage(index);
+        });
+
+        setInterval(() => {
+            nextButton.click();
+        }, 3000);
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        images.forEach(img => {
+            img.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            img.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX) {
+                nextButton.click();
+            }
+            if (touchEndX > touchStartX) {
+                prevButton.click();
+            }
+        }
+    </script>
+
+</body>
+</html>
